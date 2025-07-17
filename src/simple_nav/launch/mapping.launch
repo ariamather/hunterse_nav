@@ -1,0 +1,18 @@
+<launch>
+  <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch">
+    </include>
+
+  <include file="$(find fast_lio)/launch/mapping_mid360.launch">
+    </include>
+  <include file="$(find simple_nav)/launch/gmapping.launch">
+    </include>
+
+	<!-- build 2d map -->
+	<!-- <include file="$(find simple_nav)/launch/Pointcloud2Map.launch">
+	</include> -->
+
+	<!-- pointscloud2 to laserscans -->
+	<include file="$(find simple_nav)/launch/PointsCloud2toLaserscanMap.launch">
+	</include>
+
+</launch>

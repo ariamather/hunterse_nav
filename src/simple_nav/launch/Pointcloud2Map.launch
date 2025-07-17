@@ -1,0 +1,17 @@
+<launch>
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+        <param name="resolution" value="0.05" />
+        <param name="frame_id" value="base_footprint_init" />
+        <param name="sensor_model/max_range" value="1000.0" />
+        <param name="latch" value="true" />
+        <param name="pointcloud_max_z" value="1" />
+        <param name="pointcloud_min_z" value="0.0" />
+
+        <!-- 允许更新并去除动态障碍物 -->
+        <param name="update_dynamic_obstacles" value="true" />  <!-- 启用动态障碍物更新 -->
+        <param name="min_obstacle_height" value="2.0" /> <!-- 设置动态障碍物的最低高度 -->
+
+        <!-- 设置话题映射 -->
+        <remap from="cloud_in" to="/cloud_registered" />
+    </node>
+</launch>

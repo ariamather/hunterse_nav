@@ -1,0 +1,19 @@
+GlobalPlanner:                                  # 全局路径规划器配置（参考：http://wiki.ros.org/global_planner）
+  # old_navfn_behavior: false                     # 是否完全模拟navfn的行为（其他布尔参数将使用默认值），默认为false
+  # use_quadratic: true                           # 是否使用二次势场近似计算。若为false则使用简单计算方式，默认为true
+  # use_dijkstra: true                            # 是否使用Dijkstra算法。若为false则使用A*算法，默认为true
+  # use_grid_path: false                          # 是否生成严格沿网格边界的路径。若为false则使用梯度下降法，默认为false
+  
+  allow_unknown: false                           # 是否允许在未知区域规划路径，默认为true
+  #                                               # 注意：需要代价地图的障碍物层设置track_unknown_space: true才能生效
+  # planner_window_x: 0.0                         # 规划窗口X轴大小（单位：米），默认为0.0（无限制）
+  # planner_window_y: 0.0                         # 规划窗口Y轴大小（单位：米），默认为0.0（无限制）
+  # default_tolerance: 0.0                        # 当目标点位于障碍物中时，规划到该半径内最近的可达点，默认为0.0
+  
+  # publish_scale: 100                            # 发布势场值的缩放系数，默认为100
+  # planner_costmap_publish_frequency: 0.0        # 规划器代价地图发布频率（Hz），0表示不发布，默认为0.0
+  
+  # lethal_cost: 253                              # 致命障碍物的代价值（大于此值视为不可通行），默认为253
+  # neutral_cost: 30                            # 自由空间的基准代价值，默认为50
+  # cost_factor: 0.5                              # 代价地图的代价缩放因子，默认为3.0
+  # publish_potential: true                       # 是否发布势场地图（不同于navfn的点云势场），默认为true

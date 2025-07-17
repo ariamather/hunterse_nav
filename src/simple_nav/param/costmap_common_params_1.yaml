@@ -1,0 +1,18 @@
+obstacle_range: 3.0
+raytrace_range: 5.0
+
+# scout_mini 的尺寸是 627mm * 549mm，0.627m * 0.549m
+# 0.627/2 = 0.3135, 0.549/2 = 0.2745
+# footprint: [[-0.29, -0.28], [-0.29, 0.28], [0.29, 0.28], [0.29, -0.28]] 
+footprint: [[-0.3135, -0.2745], [-0.3135, 0.2745], [0.3135, 0.2745], [0.3135, -0.2745]] 
+# robot_radius: ir_of_robot
+# robot_radius: 0.25  # xbot
+
+inflation_radius: 0.35
+map_type: costmap
+#导航包所需要的传感器
+observation_sources: scan
+track_unknown_space: true
+#对传感器的坐标系和数据进行配置。这个也会用于代价地图添加和清除障碍物。例如，你可以用激光雷达传感器用于在代价地图添加障碍物，再添加kinect用于导航和清除障碍物。
+#sensor_frame should be your own frame in tftree
+scan: {sensor_frame: laser_link_2d, data_type: LaserScan, topic: /scan, marking: true, clearing: true}

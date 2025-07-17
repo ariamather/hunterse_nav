@@ -1,0 +1,10 @@
+# 忽略build文件夹及其内容
+/build/
+devel/
+
+# 忽略所有.pcd文件
+*.pcd
+
+# 如果需要递归忽略子目录中的build和devel
+​**​/build/
+​**​/devel/

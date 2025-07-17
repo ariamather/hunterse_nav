@@ -1,0 +1,13 @@
+<launch>
+
+    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch">
+        </include>
+    <include file="$(find fast_lio_localization)/launch/localization_mid360.launch">
+        </include>
+    <node name = "map_server" pkg = "map_server" type = "map_server" args="/home/venom/catkin_ws/map/scans.yaml /map:=prior_map"/>
+
+	<!-- pointscloud2 to laserscans -->
+
+	<!-- <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_0" args="0 0 0 0 0 0 base_footprint base_link" />
+	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_1" args="0 0 0 0 0 0 body base_footprint" /> -->
+</launch>

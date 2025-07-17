@@ -1,0 +1,12 @@
+<launch>
+  <!-- GMapping SLAM 配置 -->
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <param name="base_frame" value="body" />
+    <param name="odom_frame" value="camera_init" />
+    <param name="map_frame" value="map" />
+	<param name="map_update_interval" value="1" />
+	<param name="maxUrange" value="10.0" />
+	<param name="linearUpdate" value="0.5" />
+	<param name="angularUpdate" value="0.5" />
+  </node>
+</launch>

@@ -1,0 +1,508 @@
+# 如何使用 RViz 获取路点坐标和方向 (用于填充此文件):
+#
+# 1. 启动 ROS 系统:
+#    - 确保机器人/模拟器、定位系统 (如 amcl)、move_base 节点和 RViz 正在运行。
+#    - `move_base` 节点应配置为使用与路点 `frame_id` 相同的全局地图坐标系 (例如 "prior_map")。
+#
+# 2. 配置 RViz:
+#    - 在 RViz 左侧 "Displays" 面板的 "Global Options" 中，设置 "Fixed Frame" 为你的全局地图坐标系 (例如 "prior_map")。
+#    - 添加并配置 "Map" 显示，使其订阅正确的地图主题 (例如 "/prior_map" 或 move_base 使用的地图)。
+#
+# 3. 监听目标点信息:
+#    - 打开一个新的终端。
+#    - 运行命令: `rostopic echo /move_base_simple/goal`
+#      (注意: RViz的"2D Nav Goal"工具默认发布的是`geometry_msgs/PoseStamped`类型的消息到`/move_base_simple/goal`。
+#       如果你的`move_base`节点名为`move_base1`，它会订阅`/move_base1/goal` (actionlib的`MoveBaseActionGoal`)
+#       以及`/move_base1_simple/goal` (如果节点内部有这样的重映射或订阅)。
+#       通常，对于获取坐标，监听`/move_base_simple/goal`更直接，因为它就是`PoseStamped`。
+#       如果你确定RViz的"2D Nav Goal"发布到了`/move_base1/goal`并且它是`PoseStamped`类型，那也可以。
+#       最稳妥的是检查RViz的"Tool Properties"面板中"2D Nav Goal"工具的"Topic"设置，它通常是`/move_base_simple/goal`。)
+#
+# 4. 在 RViz 中选择目标:
+#    - 在 RViz 顶部工具栏中，点击 "2D Nav Goal" 按钮 (通常是一个绿色箭头)。
+#    - 在地图上点击选择目标位置。
+#    - 按住鼠标左键并拖动以设置目标朝向。
+#    - 松开鼠标左键。
+#
+# 5. 记录坐标和方向:
+#    - 查看运行 `rostopic echo` 命令的终端。
+#    - 你会看到类似以下格式的输出 (如果是 /move_base_simple/goal):
+#      ```
+#      header:
+#        frame_id: "prior_map"  # <--- 确认这是正确的坐标系
+#      pose:
+#        position:
+#          x: <X_COORD>
+#          y: <Y_COORD>
+#          z: 0.0
+#        orientation:
+#          x: <QX_COORD>
+#          y: <QY_COORD>
+#          z: <QZ_COORD>
+#          w: <QW_COORD>
+#      ```
+#    - 如果监听的是 `/move_base1/goal` (ActionGoal)，结构会是 `goal.target_pose.header...` 和 `goal.target_pose.pose...`。
+#    - 将 `frame_id` (应与你的全局地图坐标系一致)、`position` (x, y, z) 和 `orientation` (x, y, z, w)
+#      的值复制到下面的路点条目中。
+#
+# 6. 重复步骤 4 和 5 为所有需要的路点获取数据。
+#
+# --------------------------------------------------------------------------
+# 路点列表开始:
+
+# 如何使用 RViz 获取路点坐标和方向 (用于填充此文件):
+#
+# 1. 启动 ROS 系统:
+#    - 确保机器人/模拟器、定位系统 (如 amcl)、move_base 节点和 RViz 正在运行。
+#    - `move_base` 节点应配置为使用与路点 `frame_id` 相同的全局地图坐标系 (例如 "prior_map")。
+#
+# 2. 配置 RViz:
+#    - 在 RViz 左侧 "Displays" 面板的 "Global Options" 中，设置 "Fixed Frame" 为你的全局地图坐标系 (例如 "prior_map")。
+#    - 添加并配置 "Map" 显示，使其订阅正确的地图主题 (例如 "/prior_map" 或 move_base 使用的地图)。
+#
+# 3. 监听目标点信息:
+#    - 打开一个新的终端。
+#    - 运行命令: `rostopic echo /move_base_simple/goal`
+#      (注意: RViz的"2D Nav Goal"工具默认发布的是`geometry_msgs/PoseStamped`类型的消息到`/move_base_simple/goal`。
+#       如果你的`move_base`节点名为`move_base1`，它会订阅`/move_base1/goal` (actionlib的`MoveBaseActionGoal`)
+#       以及`/move_base1_simple/goal` (如果节点内部有这样的重映射或订阅)。
+#       通常，对于获取坐标，监听`/move_base_simple/goal`更直接，因为它就是`PoseStamped`。
+#       如果你确定RViz的"2D Nav Goal"发布到了`/move_base1/goal`并且它是`PoseStamped`类型，那也可以。
+#       最稳妥的是检查RViz的"Tool Properties"面板中"2D Nav Goal"工具的"Topic"设置，它通常是`/move_base_simple/goal`。)
+#
+# 4. 在 RViz 中选择目标:
+#    - 在 RViz 顶部工具栏中，点击 "2D Nav Goal" 按钮 (通常是一个绿色箭头)。
+#    - 在地图上点击选择目标位置。
+#    - 按住鼠标左键并拖动以设置目标朝向。
+#    - 松开鼠标左键。
+#
+# 5. 记录坐标和方向:
+#    - 查看运行 `rostopic echo` 命令的终端。
+#    - 你会看到类似以下格式的输出 (如果是 /move_base_simple/goal):
+#      ```
+#      header:
+#        frame_id: "prior_map"  # <--- 确认这是正确的坐标系
+#      pose:
+#        position:
+#          x: <X_COORD>
+#          y: <Y_COORD>
+#          z: 0.0
+#        orientation:
+#          x: <QX_COORD>
+#          y: <QY_COORD>
+#          z: <QZ_COORD>
+#          w: <QW_COORD>
+#      ```
+#    - 如果监听的是 `/move_base1/goal` (ActionGoal)，结构会是 `goal.target_pose.header...` 和 `goal.target_pose.pose...`。
+#    - 将 `frame_id` (应与你的全局地图坐标系一致)、`position` (x, y, z) 和 `orientation` (x, y, z, w)
+#      的值复制到下面的路点条目中。
+#
+# 6. 重复步骤 4 和 5 为所有需要的路点获取数据。
+#
+# --------------------------------------------------------------------------
+# 路点列表开始:
+
+waypoints:
+  - frame_id: "map"
+    task: "nav"
+    pose: 
+      position: 
+        x: 3.7000038623809814
+        y: -2.0906708240509033
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: -0.7092462925139468
+        w: 0.7049607766076217
+
+  - frame_id: "map"
+    task: "nav"
+    pose: 
+        position: 
+          x: 2.165118932723999
+          y: -1.7987844944000244
+          z: 0.0
+        orientation: 
+          x: 0.0
+          y: 0.0
+          z: 0.7228366923246785
+          w: 0.6910188971577537
+
+
+
+  # - frame_id: "map"
+  #   task: "nav"
+  #   pose:
+  #     position:
+  #       x: 1.3881564140319824
+  #       y: -3.4010167121887207
+  #       z: 0.0
+  #     orientation:
+  #       x: 0.0
+  #       y: 0.0
+  #       z: 0.7771642817999445
+  #       w: 0.6292977666370481
+
+  - frame_id: "map"
+    task: "pick1"
+    pose: 
+      position: 
+        x: 1.4799062013626099
+        y: -1.3487037420272827
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: 0.9999969789920992
+        w: 0.002458049363881933
+
+
+
+
+
+  - frame_id: "map"
+    task: "place1"
+    pose: 
+      position: 
+        x: 0.742164134979248
+        y: -2.150236129760742
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: -0.7349692325657752
+        w: 0.6781004550814544
+
+  - frame_id: "map"
+    task: "nav"
+    pose: 
+        position: 
+          x: 2.165118932723999
+          y: -1.7987844944000244
+          z: 0.0
+        orientation: 
+          x: 0.0
+          y: 0.0
+          z: 0.7228366923246785
+          w: 0.6910188971577537
+
+
+  - frame_id: "map"
+    task: "pick2"
+    pose: 
+      position: 
+        x: 1.4799062013626099
+        y: -1.3487037420272827
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: 0.9999969789920992
+        w: 0.002458049363881933
+
+
+
+  - frame_id: "map"
+    task: "place2"
+    pose: 
+      position: 
+        x: 0.742164134979248
+        y: -2.150236129760742
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: -0.7349692325657752
+        w: 0.6781004550814544
+  
+
+  - frame_id: "map"
+    task: "nav"
+    pose: 
+        position: 
+          x: 2.165118932723999
+          y: -1.7987844944000244
+          z: 0.0
+        orientation: 
+          x: 0.0
+          y: 0.0
+          z: 0.7228366923246785
+          w: 0.6910188971577537
+
+
+  - frame_id: "map"
+    task: "pick3"
+    pose: 
+      position: 
+        x: 1.4799062013626099
+        y: -1.3487037420272827
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: 0.9999969789920992
+        w: 0.002458049363881933
+
+
+  - frame_id: "map"
+    task: "place3"
+    pose: 
+      position: 
+        x: 0.742164134979248
+        y: -2.150236129760742
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: -0.7349692325657752
+        w: 0.6781004550814544
+
+
+  - frame_id: "map"
+    task: "nav"
+    pose: 
+        position: 
+          x: 2.165118932723999
+          y: -1.7987844944000244
+          z: 0.0
+        orientation: 
+          x: 0.0
+          y: 0.0
+          z: 0.7228366923246785
+          w: 0.6910188971577537
+
+  - frame_id: "map"
+    task: "pick4"
+    pose: 
+      position: 
+        x: 1.4799062013626099
+        y: -1.3487037420272827
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: 0.9999969789920992
+        w: 0.002458049363881933
+
+
+  - frame_id: "map"
+    task: "place4"
+    pose: 
+      position: 
+        x: 0.742164134979248
+        y: -2.150236129760742
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: -0.7349692325657752
+        w: 0.6781004550814544
+
+  - frame_id: "map"
+    task: "nav"
+    pose:
+      position: 
+        x: 0.4840881824493408
+        y: -3.5405592918395996
+        z: 0.0
+      orientation: 
+        x: 0.0
+        y: 0.0
+        z: -0.8094722533608242
+        w: 0.5871581312039795
+    
+
+# '''
+# header: 
+#   seq: 1
+#   stamp: 
+#     secs: 1751986200
+#     nsecs:  50481446
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: 3.373358726501465
+#     y: -2.615018844604492
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.6958558338288264
+#     w: 0.7181814941408534
+# ---
+# header: 
+#   seq: 2
+#   stamp: 
+#     secs: 1751986224
+#     nsecs: 292004662
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: 1.3881564140319824
+#     y: -3.4010167121887207
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: 0.7771642817999445
+#     w: 0.6292977666370481
+# ---
+# header: 
+#   seq: 8
+#   stamp: 
+#     secs: 1751986474
+#     nsecs: 152914619
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: 0.6778075695037842
+#     y: -2.6865334510803223
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.9980943312948724
+#     w: 0.06170661096707194
+# ---
+# header: 
+#   seq: 9
+#   stamp: 
+#     secs: 1751986559
+#     nsecs: 578108286
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: -0.0843973159790039
+#     y: -3.866940498352051
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.659193328677106
+#     w: 0.7519735071314659
+# ---
+# header: 
+#   seq: 10
+#   stamp: 
+#     secs: 1751986607
+#     nsecs: 514479261
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: 0.6799046993255615
+#     y: -2.8541839122772217
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.9984945241683043
+#     w: 0.05485148316966073
+# ---
+# header: 
+#   seq: 11
+#   stamp: 
+#     secs: 1751986675
+#     nsecs: 957972044
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: 0.0325014591217041
+#     y: -3.829883098602295
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.6308430336485098
+#     w: 0.7759104760841583
+# ---
+# header: 
+#   seq: 12
+#   stamp: 
+#     secs: 1751986710
+#     nsecs: 166172015
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: 0.6004083156585693
+#     y: -2.7589588165283203
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.9995719045534378
+#     w: 0.029257608026170927
+# ---
+# header: 
+#   seq: 13
+#   stamp: 
+#     secs: 1751986754
+#     nsecs: 801354759
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: -0.13244342803955078
+#     y: -3.871070623397827
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.6721663845708351
+#     w: 0.7404001292902184
+# ---
+# header: 
+#   seq: 14
+#   stamp: 
+#     secs: 1751986789
+#     nsecs: 666300842
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: 0.69077467918396
+#     y: -2.7297451496124268
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.9977727670985556
+#     w: 0.06670461180826753
+# ---
+# header: 
+#   seq: 15
+#   stamp: 
+#     secs: 1751986815
+#     nsecs: 597650152
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: -0.03615260124206543
+#     y: -3.96995210647583
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.6578574283622672
+#     w: 0.7531424858209663
+# ---
+# header: 
+#   seq: 16
+#   stamp: 
+#     secs: 1751986916
+#     nsecs:   4215203
+#   frame_id: "map"
+# pose: 
+#   position: 
+#     x: -0.2732365131378174
+#     y: -5.453039169311523
+#     z: 0.0
+#   orientation: 
+#     x: 0.0
+#     y: 0.0
+#     z: -0.7540715025836887
+#     w: 0.6567923332311195
+# ---
+
+
+    
+
+ 

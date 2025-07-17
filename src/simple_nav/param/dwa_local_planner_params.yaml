@@ -1,0 +1,46 @@
+DWAPlannerROS:
+
+  max_vel_x: 1.5           # 最大前向线速度（单位：m/s）
+  min_vel_x: -0.5         # 最小前向线速度（大于 0 可防止机器人卡住）
+
+  max_vel_y: 0.0           # 最大横向速度（差速机器人设为 0）
+  min_vel_y: 0.0           # 最小横向速度
+
+  max_vel_trans: 1.5       # 最大平移速度（x方向和y方向的合成速度上限）
+  min_vel_trans: -0.5       # 最小平移速度，低于该值认为目标已到达
+#   # trans_stopped_vel: 0.1
+
+  max_vel_theta: 3.0       # 最大角速度（旋转速度，单位 rad/s）
+  min_vel_theta: 0.2       # 最小角速度，防止转动时太慢导致卡住
+#   # theta_stopped_vel: 0.1
+
+  acc_lim_x: 6           # x方向最大加速度限制
+#   acc_lim_y: 0           # y方向最大加速度限制（差速机器人无效）
+  acc_lim_theta: 3.2       # 角速度最大加速度限制
+  acc_lim_trans: 3.2       # 角速度最大加速度限制
+
+#   xy_goal_tolerance: 0.1           # 到达目标位置时允许的 XY 误差（单位：m）
+#   yaw_goal_tolerance: 0.17         # 到达目标时允许的朝向误差（单位：rad，约等于10度）
+  latch_xy_goal_tolerance: false   # 是否“锁定”位置容差，即先满足位置再考虑角度
+
+  sim_time: 3        # 模拟轨迹的时间长度（单位：秒），越长预测越远
+  vx_samples: 10        # 前向速度采样数量（越大轨迹越平滑）
+  vy_samples: 1         # 侧向速度采样数量（差速机器人设为0）
+  vtheta_samples: 20       # 角速度采样数量（建议20~60）
+  controller_frequency: 20.0  # 控制器频率，单位 Hz
+
+  path_distance_bias: 32.0         # 靠近全局路径的偏好权重（越大越贴近路径）
+  goal_distance_bias: 24.0         # 靠近目标点的偏好权重（越大越偏向直接到目标）
+  occdist_scale: 0.01              # 障碍物距离惩罚系数（越大越避开障碍物）
+
+#   forward_point_distance: 0.325    # 向前预测一个点的距离，用于引导轨迹前进方向
+#   stop_time_buffer: 0.2            # 停止前的时间缓冲，用于避免碰撞
+#   scaling_speed: 1.0               # 速度超过此值时启用代价地图缩放
+#   max_scaling_factor: 0.3         # 最大缩放因子，用于放大局部代价地图中的障碍影响
+
+#   oscillation_reset_dist: 1.05     # 机器人移动超过该距离后，重置抖动状态
+
+  publish_traj_pc : true           # 发布当前轨迹为点云，用于可视化（Rviz）
+  publish_cost_grid_pc: true       # 发布局部代价地图的点云信息，用于调试
+  global_frame_id: "odom_2d"
+  holonomic_robot: false

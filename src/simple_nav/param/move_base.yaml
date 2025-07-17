@@ -1,0 +1,8 @@
+move_base:
+  # ... 其他 move_base 参数
+  controller_frequency: 20.0 # 保持这个频率，或者根据需要调整
+  # planner_frequency: 1.0 # 保持这个频率，或者根据需要调整
+  # oscillation_timeout: 10.0 # 保持这个超时时间
+  # ...
+  # base_local_planner: "dwa_local_planner/TebLocalPlannerROS"
+  # base_global_planner: "global_planner/GlobalPlanner"
