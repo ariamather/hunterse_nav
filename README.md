@@ -1,1 +1,1 @@
-一个在ROS2平台上用于scoutmini的利用fastlio建图，以及实现重定位和导航的工作空间
+一个在ROS平台上用于scoutmini的利用fastlio建图，以及实现重定位和导航的工作空间
